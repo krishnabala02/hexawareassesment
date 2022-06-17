@@ -15,7 +15,7 @@ def process_file(file_info, z_files):
     file_names.append(file_info.filename.split("/")[1])
     file_sizes.append(file_info.file_size)
     # read with split \n will give no. of rows. length will  give count of total rows in a file
-    file_record_count.append(len(z_files.read(file_info.filename).split(b"\n")) - 1)
+    file_record_count.append(len(z_files.read(file_info.filename).split(b"\n")))
 
 
 # iterating through zip files without extracting
@@ -55,7 +55,7 @@ def write_to_file():
 
 
 # Path should be path where zip file is located
-Path = "/Users/purnaraghavaraokalva/Desktop/testfiles.zip"
+Path = "/Users/purnaraghavaraokalva/Desktop/sampledata.zip"
 process_zip(Path)
 write_to_file()
 # removing extracted nested zips
