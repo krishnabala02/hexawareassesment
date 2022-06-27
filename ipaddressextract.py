@@ -2,6 +2,7 @@
 import re
 import pandas as pd
 import datetime
+from pathlib import Path
 
 # initializing the list objects
 valid = []
@@ -11,12 +12,22 @@ invalid = []
 pattern = re.compile("^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}"
                      "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$")
 
+
+# declaring location to get text files from where text files containing ip
+# address are present in folder on desktop which consists of text files
+input_dir = Path.home().joinpath("Desktop", "IP_files")
+print(input_dir)
+# glob = specific folder
+# rglob = including subfolder
+files_list = list(input_dir.rglob("*.txt"))
+
 # opening and reading the file
-try:
-    with open('/Users/purnaraghavaraokalva/Desktop/sampleip.txt') as fh:
-        string = fh.readlines()
-except FileNotFoundError:
-    print("Sorry,the file does not exist")
+for each_file in files_list:
+    try:
+        with open(each_file) as fh:
+            string = fh.readlines()
+    except FileNotFoundError:
+        print("Sorry,the file does not exist")
 
 
 def ipextraction():
@@ -51,6 +62,7 @@ def write_to_file():
     )
     print(Df)
     Df.to_csv("outputIPfile_" + str(datetime.datetime.now()) + ".csv", index=False)
+
 
 
 ipextraction()
