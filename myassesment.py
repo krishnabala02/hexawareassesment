@@ -3,6 +3,7 @@ from zipfile import ZipFile
 import pandas as pd
 import os
 import datetime
+from pathlib import Path
 
 file_names = []
 file_sizes = []
@@ -22,16 +23,20 @@ def process_file(file_info, z_files):
 def process_zip(zipFilename):
     try:
         # with statement ensure proper aquisition and release of resources
-        with ZipFile(zipFilename) as z_files:
+        with ZipFile(zipFilename, allowZip64=True) as z_files:
 
             for file_info in z_files.infolist():
+                # print(file_info)
                 # ignoring OS related files in below condition
                 if file_info.filename[len(file_info.filename) - 1] == "/" \
                         or file_info.filename.startswith("__MACOSX") \
                         or file_info.filename.__contains__(".DS_Store"):
                     continue
-                if (file_info.filename.split(".")[1] == "zip"):
+                if file_info.filename.split(".")[1] == "zip":
                     Nested_zipfiles.append(file_info.filename)
+                    file_names.append(file_info.filename.split("/")[1])
+                    file_sizes.append(" ")
+                    file_record_count.append(" ")
                     process_zip(z_files.extract(file_info.filename))
                 else:
                     process_file(file_info, z_files)
@@ -54,9 +59,17 @@ def write_to_file():
     output_df.to_csv("output_" + str(datetime.datetime.now()) + ".csv", index=False)
 
 
-# Path should be path where zip file is located
-Path = "/Users/purnaraghavaraokalva/Desktop/sampledata.zip"
-process_zip(Path)
+# declaring location to get zip files from where zip_files is folder on desktop which consists of zip files
+input_dir = Path.home().joinpath("Desktop", "zip_files")
+print(input_dir)
+# print(Path.home().joinpath("Desktop"))
+# glob = specific folder
+# rglob = including subfolder
+files = list(input_dir.rglob("*.zip"))
+# Path = "/Users/purnaraghavaraokalva/Desktop/sampledata.zip"
+for each_file in files:
+    process_zip(each_file)
+
 write_to_file()
 # removing extracted nested zips
 for zipfile in Nested_zipfiles:
