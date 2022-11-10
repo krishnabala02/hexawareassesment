@@ -18,6 +18,7 @@ def process_zip(zipFilename):
 # Path should be path where zip file is located
 input_dir = Path.home().joinpath("Desktop", "zip_files")
 print(input_dir)
+print(input_dir)
 # print(Path.home().joinpath("Desktop"))
 # glob = specific folder
 # rglob = including subfolder
